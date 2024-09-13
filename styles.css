@@ -1,0 +1,128 @@
+/* General Styles */
+body {
+    font-family: 'Gruppo', sans-serif;
+    margin: 0;
+    overflow-x: hidden; /* Evita el desplazamiento horizontal */
+}
+
+/* Header Styles */
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: black;
+    padding: 10px 20px;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+}
+
+.header-logo {
+    height: 40px;
+    max-height: 40px;
+}
+
+.header-title {
+    color: white;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    flex-grow: 1;
+}
+
+.telegram-button {
+    margin-left: auto;
+    background-color: white;
+    color: black;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+/* Banner Styles */
+.banner {
+    margin-top: 60px;
+    padding: 5px 0;
+    background-color: #007bff;
+    text-align: center;
+    overflow: hidden;
+    position: relative;
+    border-top: 2px solid black;
+    border-bottom: 2px solid black;
+}
+
+.banner p {
+    margin: 0;
+    white-space: nowrap;
+    animation: marquee 20s linear infinite;
+    display: inline-block;
+}
+
+@keyframes marquee {
+    0% { transform: translateX(100%); }
+    100% { transform: translateX(-100%); }
+}
+
+/* Minting Container Styles */
+.minting-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+    padding: 80px 20px 20px;
+}
+
+.nft-preview {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.nft-preview img {
+    max-width: 100%;
+    height: auto;
+}
+
+.nft-details {
+    font-family: 'Adobe Arabic', sans-serif;
+    text-align: left;
+    padding: 10px;
+}
+
+.minting-actions {
+    text-align: center;
+}
+
+.minting-actions p {
+    font-weight: bold;
+}
+
+.wallet-button, .mint-button {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    background-color: #007bff;
+    border: none;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.minting-actions input {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin: 5px 0;
+}
+
+/* Footer Styles */
+.footer {
+    display: flex;
+    justify-content: space-between;
+    background-color: #f8f8f8;
+    padding: 10px 20px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    font-size: 14px;
+    color: #333;
+}
