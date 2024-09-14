@@ -1,128 +1,70 @@
-/* General Styles */
 body {
-    font-family: 'Gruppo', sans-serif;
-    margin: 0;
-    overflow-x: hidden; /* Evita el desplazamiento horizontal */
-}
-
-/* Header Styles */
-.header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background-color: black;
-    padding: 10px 20px;
-    position: fixed;
-    width: 100%;
-    top: 0;
-    z-index: 1000;
-}
-
-.header-logo {
-    height: 40px;
-    max-height: 40px;
-}
-
-.header-title {
-    color: white;
     font-family: Arial, sans-serif;
-    text-align: center;
-    flex-grow: 1;
-}
-
-.telegram-button {
-    margin-left: auto;
-    background-color: white;
-    color: black;
-    padding: 10px 20px;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-}
-
-/* Banner Styles */
-.banner {
-    margin-top: 60px;
-    padding: 5px 0;
-    background-color: #007bff;
-    text-align: center;
-    overflow: hidden;
-    position: relative;
-    border-top: 2px solid black;
-    border-bottom: 2px solid black;
-}
-
-.banner p {
+    background-color: #f0f4f8;
     margin: 0;
-    white-space: nowrap;
-    animation: marquee 20s linear infinite;
-    display: inline-block;
-}
-
-@keyframes marquee {
-    0% { transform: translateX(100%); }
-    100% { transform: translateX(-100%); }
-}
-
-/* Minting Container Styles */
-.minting-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 20px;
-    padding: 80px 20px 20px;
-}
-
-.nft-preview {
+    padding: 0;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
+    justify-content: center;
+    height: 100vh;
 }
 
-.nft-preview img {
-    max-width: 100%;
-    height: auto;
-}
-
-.nft-details {
-    font-family: 'Adobe Arabic', sans-serif;
-    text-align: left;
-    padding: 10px;
-}
-
-.minting-actions {
+.container {
     text-align: center;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.minting-actions p {
-    font-weight: bold;
+h1 {
+    color: #333;
+    margin-bottom: 20px;
 }
 
 .wallet-button, .mint-button {
-    width: 100%;
-    padding: 10px;
-    margin: 5px 0;
     background-color: #007bff;
-    border: none;
     color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
     cursor: pointer;
+    margin: 10px 0;
+    transition: background-color 0.3s ease;
+}
+
+.wallet-button:hover, .mint-button:hover {
+    background-color: #0056b3;
+}
+
+input[type="password"] {
+    padding: 10px;
+    width: calc(100% - 22px);
+    margin-top: 10px;
+    border: 1px solid #ddd;
     border-radius: 5px;
 }
 
-.minting-actions input {
-    width: calc(100% - 20px);
-    padding: 10px;
-    margin: 5px 0;
+input[type="password"]:focus {
+    border-color: #007bff;
+    outline: none;
 }
 
-/* Footer Styles */
-.footer {
-    display: flex;
-    justify-content: space-between;
-    background-color: #f8f8f8;
-    padding: 10px 20px;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    font-size: 14px;
-    color: #333;
+#error-message {
+    color: red;
+    margin-top: 10px;
+    display: none;
+}
+
+.success-message {
+    color: green;
+    margin-top: 10px;
+    display: none;
+}
+
+footer {
+    margin-top: 20px;
+    font-size: 12px;
+    color: #555;
 }
