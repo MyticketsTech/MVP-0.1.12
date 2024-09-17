@@ -6,7 +6,7 @@ const provider = new ethers.providers.JsonRpcProvider("https://base-mainnet.g.al
 
 // Configuración del contrato
 const contractAddress = "0x342DD548A716E1202ad3158F5b6E21f35c129Fe4";
-const contractABI = [ [
+const contractABI = [[
 	{
 		"inputs": [
 			{
@@ -1586,10 +1586,16 @@ const contractABI = [ [
 		"stateMutability": "view",
 		"type": "function"
 	}
-] ];
+]];
 
 let contract;
 let signer;
+
+// Asegurarse de que el DOM esté cargado
+window.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('connect-wallet-btn').addEventListener('click', connectWallet);
+    document.getElementById('mint-btn').addEventListener('click', mintNFT);
+});
 
 // Conectar la billetera
 async function connectWallet() {
@@ -1618,7 +1624,8 @@ async function mintNFT() {
     }
 
     try {
-        const tx = await contract.mintWithPassword(1, password);
+        // Ajustar tokenId dinámicamente si es necesario
+        const tx = await contract.mintWithPassword(1, password); // Ajustar con lógica para tokenId correcto
         await tx.wait();
         alert('Minting successful!');
     } catch (error) {
@@ -1626,7 +1633,3 @@ async function mintNFT() {
         alert('Error during minting: ' + error.message);
     }
 }
-
-// Eventos de botones
-document.getElementById('connect-wallet-btn').addEventListener('click', connectWallet);
-document.getElementById('mint-btn').addEventListener('click', mintNFT);
