@@ -6,7 +6,7 @@ const provider = new ethers.providers.JsonRpcProvider("https://base-mainnet.g.al
 
 // Configuración del contrato
 const contractAddress = "0x342DD548A716E1202ad3158F5b6E21f35c129Fe4";
-const contractABI = [[
+const contractABI = [ [
 	{
 		"inputs": [
 			{
@@ -1586,7 +1586,7 @@ const contractABI = [[
 		"stateMutability": "view",
 		"type": "function"
 	}
-]];
+] ];
 
 let contract;
 let signer;
@@ -1594,27 +1594,39 @@ let signer;
 // Conectar la billetera
 async function connectWallet() {
     if (window.ethereum) {
-        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-        const account = accounts[0];
-        signer = provider.getSigner(account);
-        contract = new ethers.Contract(contractAddress, contractABI, signer);
-        document.getElementById('wallet-address').innerText = `Connected: ${account}`;
+        try {
+            const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+            const account = accounts[0];
+            signer = provider.getSigner(account);
+            contract = new ethers.Contract(contractAddress, contractABI, signer);
+            document.getElementById('wallet-address').innerText = `Connected: ${account}`;
+        } catch (error) {
+            console.error('Error connecting wallet:', error);
+            alert('Error connecting wallet: ' + error.message);
+        }
     } else {
-        alert('MetaMask not detected');
+        alert('MetaMask not detected. Please install MetaMask.');
     }
 }
 
 // Función para minting
 async function mintNFT() {
     const password = document.getElementById('password-input').value;
+    if (!password) {
+        alert('Please enter a password.');
+        return;
+    }
+
     try {
         const tx = await contract.mintWithPassword(1, password);
         await tx.wait();
         alert('Minting successful!');
     } catch (error) {
+        console.error('Minting error:', error);
         alert('Error during minting: ' + error.message);
     }
 }
 
+// Eventos de botones
 document.getElementById('connect-wallet-btn').addEventListener('click', connectWallet);
 document.getElementById('mint-btn').addEventListener('click', mintNFT);
