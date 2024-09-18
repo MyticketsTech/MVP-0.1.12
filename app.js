@@ -1,12 +1,10 @@
-// Conexión con ethers.js
-const { ethers } = require('ethers');
+const provider = new ethers.providers.Web3Provider(window.ethereum);
+let signer;
+let contract;
 
-// Configuración del proveedor
-const provider = new ethers.providers.JsonRpcProvider("https://base-mainnet.g.alchemy.com/v2/jyD9_e7NFjPRgo2V3DaHnN0gq7prtwnL");
-
-// Configuración del contrato
-const contractAddress = "0x342DD548A716E1202ad3158F5b6E21f35c129Fe4";
-const contractABI = [[
+const contractAddress = "0x342DD548A716E1202ad3158F5b6E21f35c129Fe4"; // Asegúrate de usar la dirección correcta
+const abi = [
+    [
 	{
 		"inputs": [
 			{
@@ -1586,50 +1584,33 @@ const contractABI = [[
 		"stateMutability": "view",
 		"type": "function"
 	}
-]];
+]
+];
 
-let contract;
-let signer;
-
-// Asegurarse de que el DOM esté cargado
-window.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('connect-wallet-btn').addEventListener('click', connectWallet);
-    document.getElementById('mint-btn').addEventListener('click', mintNFT);
-});
-
-// Conectar la billetera
 async function connectWallet() {
-    if (window.ethereum) {
-        try {
-            const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-            const account = accounts[0];
-            signer = provider.getSigner(account);
-            contract = new ethers.Contract(contractAddress, contractABI, signer);
-            document.getElementById('wallet-address').innerText = `Connected: ${account}`;
-        } catch (error) {
-            console.error('Error connecting wallet:', error);
-            alert('Error connecting wallet: ' + error.message);
-        }
-    } else {
-        alert('MetaMask not detected. Please install MetaMask.');
+    try {
+        await provider.send("eth_requestAccounts", []);
+        signer = provider.getSigner();
+        contract = new ethers.Contract(contractAddress, abi, signer);
+        document.querySelector('.wallet-button').innerText = 'Billetera Conectada';
+    } catch (error) {
+        alert("Error al conectar la billetera: " + error.message);
     }
 }
 
-// Función para minting
 async function mintNFT() {
-    const password = document.getElementById('password-input').value;
+    const password = document.getElementById('password').value;
+
     if (!password) {
-        alert('Please enter a password.');
+        alert("Por favor ingrese una contraseña.");
         return;
     }
 
     try {
-        // Ajustar tokenId dinámicamente si es necesario
-        const tx = await contract.mintWithPassword(1, password); // Ajustar con lógica para tokenId correcto
+        const tx = await contract.mint(signer.getAddress(), Date.now(), ethers.utils.formatBytes32String(password));
         await tx.wait();
-        alert('Minting successful!');
+        alert("¡Minting completado con éxito!");
     } catch (error) {
-        console.error('Minting error:', error);
-        alert('Error during minting: ' + error.message);
+        alert("Error al mintear el NFT: " + error.message);
     }
 }
