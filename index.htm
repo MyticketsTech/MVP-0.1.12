@@ -11,12 +11,19 @@
 <body>
     <div class="container">
         <h1>Mint NFT con Contraseña</h1>
+        <!-- Botón para conectar la billetera -->
         <button class="wallet-button" onclick="connectWallet()">Conectar Billetera</button>
+        <!-- Campo de entrada para la contraseña -->
         <input type="text" id="password" placeholder="Introduce tu contraseña">
+        <!-- Botón para mintear el NFT -->
         <button onclick="mintNFT()">Mint NFT</button>
+        <!-- Elemento para mostrar mensajes de error o éxito -->
+        <div id="message"></div>
+        <!-- Canvas para la animación de confeti -->
         <canvas id="my-canvas"></canvas>
     </div>
     <script src="app.js"></script>
 </body>
 </html>
+
 

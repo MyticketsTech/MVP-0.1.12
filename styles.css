@@ -1,6 +1,6 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #f0f4f8;
+    background-color: #e6f7ff; /* Cambié a un tono más suave */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -11,15 +11,16 @@ body {
 .container {
     text-align: center;
     background-color: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    padding: 30px; /* Aumenté el padding para mejor presentación */
+    border-radius: 15px; /* Más bordes redondeados */
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1); /* Sombra más suave */
 }
 
 input, button {
-    margin: 10px 0;
-    padding: 10px;
+    margin: 15px 0; /* Aumenté el margen para mejor separación */
+    padding: 12px;
     width: 80%;
+    border-radius: 8px; /* Bordes más suaves */
 }
 
 button {
@@ -27,11 +28,17 @@ button {
     color: white;
     border: none;
     cursor: pointer;
-    border-radius: 5px;
+    border-radius: 8px;
 }
 
 button:hover {
     background-color: #45a049;
+}
+
+#message {
+    font-size: 14px;
+    color: #ff0000; /* Color rojo para mensajes de error */
+    margin-top: 10px;
 }
 
 canvas {

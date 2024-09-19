@@ -2,9 +2,8 @@ const provider = new ethers.providers.Web3Provider(window.ethereum);
 let signer;
 let contract;
 
-const contractAddress = "0x342DD548A716E1202ad3158F5b6E21f35c129Fe4"; // Asegúrate de usar la dirección correcta
+const contractAddress = "0x342DD548A716E1202ad3158F5b6E21f35c129Fe4"; // Dirección del contrato
 const abi = [
-    [
 	{
 		"inputs": [
 			{
@@ -1584,7 +1583,6 @@ const abi = [
 		"stateMutability": "view",
 		"type": "function"
 	}
-]
 ];
 
 async function connectWallet() {
@@ -1593,8 +1591,9 @@ async function connectWallet() {
         signer = provider.getSigner();
         contract = new ethers.Contract(contractAddress, abi, signer);
         document.querySelector('.wallet-button').innerText = 'Billetera Conectada';
+        showMessage("Billetera conectada exitosamente", "success");
     } catch (error) {
-        alert("Error al conectar la billetera: " + error.message);
+        showMessage("Error al conectar la billetera: " + error.message, "error");
     }
 }
 
@@ -1602,15 +1601,28 @@ async function mintNFT() {
     const password = document.getElementById('password').value;
 
     if (!password) {
-        alert("Por favor ingrese una contraseña.");
+        showMessage("Por favor ingrese una contraseña.", "error");
         return;
     }
 
     try {
-        const tx = await contract.mint(signer.getAddress(), Date.now(), ethers.utils.formatBytes32String(password));
+        const tx = await contract.mintWithPassword(signer.getAddress(), 1, password); // Asegúrate de usar el nombre de función correcto
         await tx.wait();
-        alert("¡Minting completado con éxito!");
+        showMessage("¡Minting completado con éxito!", "success");
+        launchConfetti();
     } catch (error) {
-        alert("Error al mintear el NFT: " + error.message);
+        showMessage("Error al mintear el NFT: " + error.message, "error");
     }
+}
+
+function showMessage(message, type) {
+    const messageDiv = document.getElementById('message');
+    messageDiv.innerText = message;
+    messageDiv.style.color = type === "error" ? "#ff0000" : "#4CAF50"; // Rojo para errores, verde para éxito
+}
+
+function launchConfetti() {
+    const confettiSettings = { target: 'my-canvas', max: 100, size: 1 };
+    const confetti = new ConfettiGenerator(confettiSettings);
+    confetti.render();
 }
