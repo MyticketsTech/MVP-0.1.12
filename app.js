@@ -1583,7 +1583,7 @@ const abi = [
 		"stateMutability": "view",
 		"type": "function"
 	}
- ];
+];
 
 async function connectWallet() {
     if (typeof window.ethereum !== 'undefined') {
@@ -1619,7 +1619,13 @@ async function mintNFT() {
 
     try {
         console.log("Intentando mintear con la contraseña:", password);
-        const tx = await contract.mintWithPassword(signer.getAddress(), 1, password); // Ajusta la función si es necesario
+        
+        // Inicializar el contrato si aún no está inicializado
+        if (!contract) {
+            contract = new ethers.Contract(contractAddress, abi, signer);
+        }
+
+        const tx = await contract.mintWithPassword(signer.getAddress(), 1, password);
         await tx.wait();
         showMessage("¡Minting completado con éxito!", "success");
         await getNFTCounts(); // Actualizar recuento tras el minting
