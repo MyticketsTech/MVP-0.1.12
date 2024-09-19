@@ -1,9 +1,9 @@
-let provider;
+const provider = new ethers.providers.Web3Provider(window.ethereum);
 let signer;
 let contract;
 
-// ABI del contrato NFT (debes asegurarte de que esté actualizado)
-const contractABI = [
+const contractAddress = "0xd36481FAE21F2F3cE2fA228B3429e75097D0a41a";
+const abi = [
     [
 	{
 		"inputs": [
@@ -1587,74 +1587,38 @@ const contractABI = [
 ]
 ];
 
-const contractAddress = "DIRECCION_DEL_CONTRATO"; // Reemplazar con la dirección de tu contrato NFT
-
-async function detectMetaMask() {
-    if (window.ethereum) {
-        provider = new ethers.providers.Web3Provider(window.ethereum);
-        console.log('MetaMask detected!');
-    } else {
-        alert('MetaMask is not installed. Please install MetaMask to proceed.');
-    }
-}
-
-window.onload = detectMetaMask;
-
-// Función para conectar la billetera
 async function connectWallet() {
     try {
-        // Solicitar acceso a MetaMask
         await provider.send("eth_requestAccounts", []);
         signer = provider.getSigner();
-        const userAddress = await signer.getAddress();
-        console.log("Conectado: ", userAddress);
-        document.getElementById('walletAddress').innerText = `Conectado: ${userAddress}`;
-
-        // Inicializar el contrato después de la conexión
-        contract = new ethers.Contract(contractAddress, contractABI, signer);
-
-        // Llamar a la función para obtener el número de NFTs restantes
-        updateNFTsLeft();
-
+        contract = new ethers.Contract(contractAddress, abi, signer);
+        document.querySelector('.wallet-button').innerText = 'Billetera Conectada';
     } catch (error) {
-        console.error("Error al conectar la billetera:", error);
-        alert('Error al conectar la billetera: ' + error.message);
+        alert("Error al conectar la billetera: " + error.message);
     }
 }
 
-// Función para actualizar el número de NFTs restantes
-async function updateNFTsLeft() {
-    try {
-        if (contract) {
-            const nftsLeft = await contract.totalSupply(); // Reemplazar 'totalSupply' con la función correcta de tu contrato
-            document.getElementById('nftsLeft').innerText = `NFTs restantes: ${nftsLeft}`;
-        }
-    } catch (error) {
-        console.error("Error al obtener el número de NFTs restantes:", error);
-    }
-}
-
-// Función para mintear el NFT
 async function mintNFT() {
     const password = document.getElementById('password').value;
+
     if (!password) {
-        alert("Por favor, introduce una contraseña para mintear.");
+        alert("Por favor ingrese una contraseña.");
         return;
     }
 
     try {
-        if (contract) {
-            const tx = await contract.mintWithPassword(password); // Reemplazar 'mintWithPassword' con la función correcta de tu contrato
-            await tx.wait(); // Esperar a que la transacción sea minada
-            alert('Minteo completado con éxito');
-            updateNFTsLeft(); // Actualizar el número de NFTs restantes después de mintear
-        }
+        const tx = await contract.mint(signer.getAddress(), Date.now(), ethers.utils.formatBytes32String(password));
+        await tx.wait();
+        alert("¡Minting completado con éxito!");
+        confetti();  // Llamada a la animación de confeti
     } catch (error) {
-        console.error("Error al mintear el NFT:", error);
-        alert('Error al mintear el NFT: ' + error.message);
+        alert("Error al mintear el NFT: " + error.message);
     }
 }
 
-// Vincular las funciones a los botones correspondientes en el HTML
-document.getElementById('connectButton').addEventListener('click', connectWallet);
-document.getElementById('mintButton').addEventListener('click', mintNFT);
+// Función de animación de confeti
+function confetti() {
+    const confettiSettings = { target: 'my-canvas' };
+    const confetti = new ConfettiGenerator(confettiSettings);
+    confetti.render();
+}
