@@ -1,4 +1,5 @@
-const provider = new ethers.providers.Web3Provider(window.ethereum);
+// Inicializar el proveedor de Web3 con MetaMask
+let provider;
 let signer;
 let contract;
 
@@ -1583,15 +1584,25 @@ const abi = [
 		"stateMutability": "view",
 		"type": "function"
 	}
-];
+    ];
 
 async function connectWallet() {
     try {
+        if (!window.ethereum) {
+            alert("MetaMask no está instalada. Por favor, instálala para continuar.");
+            return;
+        }
+
+        provider = new ethers.providers.Web3Provider(window.ethereum);
         await provider.send("eth_requestAccounts", []);
         signer = provider.getSigner();
         contract = new ethers.Contract(contractAddress, abi, signer);
+
         document.querySelector('.wallet-button').innerText = 'Billetera Conectada';
         showMessage("Billetera conectada exitosamente", "success");
+        
+        // Llamar al recuento de NFTs
+        await getNFTCounts();
     } catch (error) {
         showMessage("Error al conectar la billetera: " + error.message, "error");
     }
@@ -1606,23 +1617,21 @@ async function mintNFT() {
     }
 
     try {
-        const tx = await contract.mintWithPassword(signer.getAddress(), 1, password); // Asegúrate de usar el nombre de función correcto
+        const tx = await contract.mintWithPassword(signer.getAddress(), 1, password); // Ajusta la función si es necesario
         await tx.wait();
         showMessage("¡Minting completado con éxito!", "success");
+        await getNFTCounts(); // Actualizar recuento tras el minting
         launchConfetti();
     } catch (error) {
         showMessage("Error al mintear el NFT: " + error.message, "error");
     }
 }
 
-function showMessage(message, type) {
-    const messageDiv = document.getElementById('message');
-    messageDiv.innerText = message;
-    messageDiv.style.color = type === "error" ? "#ff0000" : "#4CAF50"; // Rojo para errores, verde para éxito
-}
-
-function launchConfetti() {
-    const confettiSettings = { target: 'my-canvas', max: 100, size: 1 };
-    const confetti = new ConfettiGenerator(confettiSettings);
-    confetti.render();
-}
+async function getNFTCounts() {
+    try {
+        const totalSupply = await contract.totalSupply(); // Consulta al contrato
+        const maxSupply = 1000; // Cambia esto según el máximo permitido en tu contrato
+        const remaining = maxSupply - totalSupply;
+        document.getElementById('nft-count').innerText = `Total NFTs minteados: ${totalSupply} / ${maxSupply}. Restantes: ${remaining}`;
+    } catch (error) {
+        showMessage
