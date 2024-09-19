@@ -1584,7 +1584,7 @@ const abi = [
 		"stateMutability": "view",
 		"type": "function"
 	}
-    ];
+];
 
 async function connectWallet() {
     try {
@@ -1623,6 +1623,7 @@ async function mintNFT() {
         await getNFTCounts(); // Actualizar recuento tras el minting
         launchConfetti();
     } catch (error) {
+        console.error("Error durante el minting:", error);
         showMessage("Error al mintear el NFT: " + error.message, "error");
     }
 }
@@ -1634,4 +1635,25 @@ async function getNFTCounts() {
         const remaining = maxSupply - totalSupply;
         document.getElementById('nft-count').innerText = `Total NFTs minteados: ${totalSupply} / ${maxSupply}. Restantes: ${remaining}`;
     } catch (error) {
-        showMessage
+        showMessage("Error al obtener el recuento de NFTs: " + error.message, "error");
+    }
+}
+
+function showMessage(message, type) {
+    const messageDiv = document.getElementById('message');
+    messageDiv.innerText = message;
+    messageDiv.style.color = type === "error" ? "#ff0000" : "#4CAF50";
+}
+
+function launchConfetti() {
+    const confettiSettings = { target: 'my-canvas', max: 100, size: 1 };
+    const confetti = new ConfettiGenerator(confettiSettings);
+    confetti.render();
+}
+
+// Agregar un evento de escucha para detectar si MetaMask cambia de cuenta
+if (window.ethereum) {
+    window.ethereum.on('accountsChanged', function (accounts) {
+        showMessage('Cuenta cambiada a: ' + accounts[0], 'info');
+    });
+}
