@@ -1,10 +1,9 @@
-// Inicializar el proveedor de Web3 con MetaMask
 let provider;
 let signer;
 let contract;
 
 const contractAddress = "0x342DD548A716E1202ad3158F5b6E21f35c129Fe4"; // Dirección del contrato
-const abi = [
+const abi = [ 
 	{
 		"inputs": [
 			{
@@ -1584,27 +1583,29 @@ const abi = [
 		"stateMutability": "view",
 		"type": "function"
 	}
-];
+ ];
 
 async function connectWallet() {
-    try {
-        if (!window.ethereum) {
-            alert("MetaMask no está instalada. Por favor, instálala para continuar.");
-            return;
+    if (typeof window.ethereum !== 'undefined') {
+        console.log('MetaMask detectado');
+        try {
+            // Solicitar acceso a la cuenta de MetaMask
+            await window.ethereum.request({ method: 'eth_requestAccounts' });
+            provider = new ethers.providers.Web3Provider(window.ethereum);
+            signer = provider.getSigner();
+            
+            // Verificar que la conexión se realizó y obtener la dirección
+            const address = await signer.getAddress();
+            console.log('Conexión establecida, cuenta:', address);
+
+            document.querySelector('.wallet-button').innerText = 'Billetera Conectada';
+            showMessage(`Billetera conectada exitosamente: ${address}`, "success");
+        } catch (error) {
+            console.error("Error al conectar MetaMask:", error);
+            showMessage("Error al conectar MetaMask: " + error.message, "error");
         }
-
-        provider = new ethers.providers.Web3Provider(window.ethereum);
-        await provider.send("eth_requestAccounts", []);
-        signer = provider.getSigner();
-        contract = new ethers.Contract(contractAddress, abi, signer);
-
-        document.querySelector('.wallet-button').innerText = 'Billetera Conectada';
-        showMessage("Billetera conectada exitosamente", "success");
-        
-        // Llamar al recuento de NFTs
-        await getNFTCounts();
-    } catch (error) {
-        showMessage("Error al conectar la billetera: " + error.message, "error");
+    } else {
+        alert("MetaMask no está instalada. Por favor, instálala para continuar.");
     }
 }
 
@@ -1617,6 +1618,7 @@ async function mintNFT() {
     }
 
     try {
+        console.log("Intentando mintear con la contraseña:", password);
         const tx = await contract.mintWithPassword(signer.getAddress(), 1, password); // Ajusta la función si es necesario
         await tx.wait();
         showMessage("¡Minting completado con éxito!", "success");
@@ -1630,11 +1632,13 @@ async function mintNFT() {
 
 async function getNFTCounts() {
     try {
+        console.log("Intentando obtener el recuento de NFTs...");
         const totalSupply = await contract.totalSupply(); // Consulta al contrato
         const maxSupply = 1000; // Cambia esto según el máximo permitido en tu contrato
         const remaining = maxSupply - totalSupply;
         document.getElementById('nft-count').innerText = `Total NFTs minteados: ${totalSupply} / ${maxSupply}. Restantes: ${remaining}`;
     } catch (error) {
+        console.error("Error al obtener el recuento de NFTs:", error);
         showMessage("Error al obtener el recuento de NFTs: " + error.message, "error");
     }
 }
@@ -1654,6 +1658,7 @@ function launchConfetti() {
 // Agregar un evento de escucha para detectar si MetaMask cambia de cuenta
 if (window.ethereum) {
     window.ethereum.on('accountsChanged', function (accounts) {
+        console.log('Cuenta cambiada a:', accounts[0]);
         showMessage('Cuenta cambiada a: ' + accounts[0], 'info');
     });
 }
