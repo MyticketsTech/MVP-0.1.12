@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mint NFT</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/ethers@5.0.0/dist/ethers.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/confetti-js@0.0.18/dist/index.min.js"></script>
+    <!-- Cargar ethers.js desde unpkg (CDN alternativo) -->
+    <script src="https://unpkg.com/ethers@5.0.0/dist/ethers.umd.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -24,6 +24,16 @@
         <!-- Canvas para la animación de confeti -->
         <canvas id="my-canvas"></canvas>
     </div>
+
+    <!-- Código para verificar si ethers.js se ha cargado -->
+    <script>
+        if (typeof ethers !== 'undefined') {
+            console.log('Ethers.js cargado correctamente');
+        } else {
+            console.log('Error: Ethers.js no se ha cargado');
+        }
+    </script>
+
     <script src="app.js"></script>
 </body>
 </html>
