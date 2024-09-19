@@ -2,7 +2,7 @@ const provider = new ethers.providers.Web3Provider(window.ethereum);
 let signer;
 let contract;
 
-const contractAddress = "0x342DD548A716E1202ad3158F5b6E21f35c129Fe4"; // Asegúrate de usar la dirección correcta
+const contractAddress = "0xd36481FAE21F2F3cE2fA228B3429e75097D0a41a";
 const abi = [
     [
 	{
@@ -1610,7 +1610,15 @@ async function mintNFT() {
         const tx = await contract.mint(signer.getAddress(), Date.now(), ethers.utils.formatBytes32String(password));
         await tx.wait();
         alert("¡Minting completado con éxito!");
+        confetti();  // Llamada a la animación de confeti
     } catch (error) {
         alert("Error al mintear el NFT: " + error.message);
     }
+}
+
+// Función de animación de confeti
+function confetti() {
+    const confettiSettings = { target: 'my-canvas' };
+    const confetti = new ConfettiGenerator(confettiSettings);
+    confetti.render();
 }

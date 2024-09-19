@@ -3,16 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minting MyTickets</title>
+    <title>Mint NFT</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/ethers@5.0.0/dist/ethers.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/confetti-js@0.0.18/dist/index.min.js"></script>
 </head>
 <body>
     <div class="container">
-        <h1>Mint your MyTickets NFT</h1>
+        <h1>Mint NFT con Contraseña</h1>
         <button class="wallet-button" onclick="connectWallet()">Conectar Billetera</button>
-        <input type="text" id="password" placeholder="Contraseña para mintear">
-        <button class="mint-button" onclick="mintNFT()">Mint NFT</button>
+        <input type="text" id="password" placeholder="Introduce tu contraseña">
+        <button onclick="mintNFT()">Mint NFT</button>
+        <canvas id="my-canvas"></canvas>
     </div>
     <script src="app.js"></script>
 </body>
 </html>
+
